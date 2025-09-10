@@ -1,52 +1,40 @@
-// index.js
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const { MongoClient } = require("mongodb");
-const nodemailer = require("nodemailer");
+import { MongoClient } from "mongodb";
+import nodemailer from "nodemailer";
 
-dotenv.config();
+const uri = process.env.MONGO_CONNECT_STRING;
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-const uri = process.env.mongo_connect_string; // 👈 must match .env
-const client = new MongoClient(uri);
-
+let client;
 let collection;
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-// connect to DB
-const connect_db = async () => {
-  try {
+async function connectToDB() {
+  if (!client) {
+    client = new MongoClient(uri);
     await client.connect();
-    console.log("✅ Connected to MongoDB");
-
-    const db = client.db(process.env.MONGO_DB); 
-    collection = db.collection(process.env.MONGO_COLLECTION); 
-  } catch (err) {
-    console.error("❌ DB connection failed:", err);
-    process.exit(1);
+    const db = client.db(process.env.MONGO_DB);
+    collection = db.collection(process.env.MONGO_COLLECTION);
   }
-};
+  return collection;
+}
 
-app.post("/api/newUser", async (req, res) => {
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   try {
-    if (!collection) {
-      return res.status(500).json({ error: "DB not initialized yet" });
-    }
+    const collection = await connectToDB();
 
     const result = await collection.insertOne(req.body);
-    res.json({ insertedId: result.insertedId });
 
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Send email to first recipient
     await transporter.sendMail({
       from: `"New User Bot" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO,
@@ -54,7 +42,7 @@ app.post("/api/newUser", async (req, res) => {
       text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
     });
 
-        
+    // Send email to second recipient
     await transporter.sendMail({
       from: `"New User Bot" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO_SUFY,
@@ -62,17 +50,11 @@ app.post("/api/newUser", async (req, res) => {
       text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
     });
 
-    console.log("📧 Email sent for new entry");
+    console.log("📧 Emails sent for new entry");
 
-
+    return res.status(200).json({ insertedId: result.insertedId });
   } catch (err) {
     console.error("Insert error:", err);
-    res.status(500).json({ error: "Insert failed" });
+    return res.status(500).json({ error: "Insert failed" });
   }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, async () => {
-  await connect_db(); // 👈 connect before handling requests
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+}
