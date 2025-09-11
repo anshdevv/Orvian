@@ -7,8 +7,8 @@
   },
   "name": "orvian",
   "version": "1.0.0",
-  "main": "api/newUser.js",
+  "main": "newUser.js",
   "scripts": {
-    "start": "node api/newUser.js"
+    "start": "node newUser.js"
   }
 }
