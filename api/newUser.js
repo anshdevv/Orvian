@@ -1,11 +1,17 @@
-import { MongoClient } from "mongodb";
-import nodemailer from "nodemailer";
+const express = require("express");
+const { MongoClient } = require("mongodb");
+const nodemailer = require("nodemailer");
+require("dotenv").config(); // load .env file if you’re using one
+
+const app = express();
+app.use(express.json());
 
 const uri = process.env.MONGO_CONNECT_STRING;
 
 let client;
 let collection;
 
+// 🔹 Connect to MongoDB once and reuse
 async function connectToDB() {
   if (!client) {
     client = new MongoClient(uri);
@@ -16,11 +22,8 @@ async function connectToDB() {
   return collection;
 }
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
+// 🔹 POST route
+app.post("/api/newuser", async (req, res) => {
   try {
     const collection = await connectToDB();
 
@@ -34,7 +37,7 @@ export default async function handler(req, res) {
       },
     });
 
-    // Send email to first recipient
+    // Send to first recipient
     await transporter.sendMail({
       from: `"New User Bot" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO,
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
       text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
     });
 
-    // Send email to second recipient
+    // Send to second recipient
     await transporter.sendMail({
       from: `"New User Bot" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO_SUFY,
@@ -52,11 +55,15 @@ export default async function handler(req, res) {
 
     console.log("📧 Emails sent for new entry");
 
-    return res.status(200).json({ insertedId: result.insertedId });
+    res.status(200).json({ insertedId: result.insertedId });
   } catch (err) {
     console.error("Insert error:", err);
-    return res.status(500).json({ error: "Insert failed" });
+    res.status(500).json({ error: "Insert failed" });
   }
-}
+});
 
-
+// 🔹 Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+});
