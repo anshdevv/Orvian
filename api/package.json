@@ -9,6 +9,6 @@
   "version": "1.0.0",
   "main": "newUser.js",
   "scripts": {
-    "start": "node api/newUser.js"
+    "start": "node api/server.js"
   }
 }
