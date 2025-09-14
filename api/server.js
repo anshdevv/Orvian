@@ -1,10 +1,15 @@
 const express = require("express");
+const cors = require("cors");
+
 const { MongoClient } = require("mongodb");
 const nodemailer = require("nodemailer");
 require("dotenv").config(); // load .env file if you’re using one
 
 const app = express();
-app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5000', // or '*'
+  credentials: true
+}));
 
 const uri = process.env.MONGO_CONNECT_STRING;
 
