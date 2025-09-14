@@ -8,7 +8,7 @@ require("dotenv").config(); // load .env file if you’re using one
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5000', // or '*'
+  origin: 'https://orvian-2.onrender.com/', // or '*'
   credentials: true
 }));
 
@@ -32,6 +32,7 @@ async function connectToDB() {
     const db = client.db(process.env.MONGO_DB);
     collection = db.collection(process.env.MONGO_COLLECTION);
   }
+
   return collection;
 }
 
