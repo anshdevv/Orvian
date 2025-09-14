@@ -8,7 +8,8 @@ require("dotenv").config(); // load .env file if you’re using one
 
 const app = express();
 app.use(cors({
-  origin: 'https://orvian-2.onrender.com/', // or '*'
+  origin: "https://orvian-2.onrender.com/", // your Vite dev server
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
 
@@ -18,6 +19,8 @@ let client;
 let collection;
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json()); // <-- parses JSON bodies
+app.use(express.urlencoded({ extended: true })); // <-- parses URL-encoded bodies
 
 // Catch-all: send index.html (for React Router / SPA)
 app.get("/", (req, res) => {
@@ -32,9 +35,10 @@ async function connectToDB() {
     const db = client.db(process.env.MONGO_DB);
     collection = db.collection(process.env.MONGO_COLLECTION);
   }
-
+// console.log(collection)
   return collection;
 }
+
 
 app.get("/api/demo",async(req,res)=>{
   res.send("hello world")
@@ -45,8 +49,10 @@ app.get("/api/demo",async(req,res)=>{
 app.post("/api/newuser", async (req, res) => {
   try {
     const collection = await connectToDB();
+    console.log(req.body)
 
     const result = await collection.insertOne(req.body);
+
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

@@ -1,4 +1,4 @@
-import { Mail, Phone, Linkedin, Twitter, Github } from "lucide-react";
+import { Mail, Phone, Instagram } from "lucide-react";
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold gradient-text mb-4">
-              AI Agency
+              Orvian
             </h3>
             <p className="text-muted-foreground mb-6 max-w-md">
               Automation that works while you sleep. Transform your business with AI-powered solutions.
@@ -23,14 +23,21 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <a href="mailto:hello@aiagency.com" className="hover:text-primary transition-colors">
-                  hello@aiagency.com
+                <a href="mailto:orvian07@gmail.com" className="hover:text-primary transition-colors">
+                  orvian07@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <a href="tel:+1234567890" className="hover:text-primary transition-colors">
-                  +1 (234) 567-890
+                <a href="tel:+923233394942" className="hover:text-primary transition-colors">
+                  +92 323 3394942
+                </a>
+              </div>
+
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                <Phone className="w-4 h-4" />
+                <a href="tel:+92 309 9888959" className="hover:text-primary transition-colors">
+                  +92 309 9888959
                 </a>
               </div>
             </div>
@@ -79,14 +86,8 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4">Follow Us</h4>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300">
-                <Github className="w-5 h-5" />
+              <a href="https://www.instagram.com/o_rvian/" className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300">
+                <Instagram className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -95,7 +96,7 @@ const Footer = () => {
         {/* Bottom bar */}
         <div className="border-t border-border/50 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © 2024 AI Agency. All rights reserved.
+            © 2025 Orvian. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-muted-foreground hover:text-primary transition-colors">

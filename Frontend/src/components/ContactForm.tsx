@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-
 const ContactForm = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -14,37 +13,40 @@ const ContactForm = () => {
     referral: ''
   });
 
+  const [loading, setLoading] = useState(false); // 👈 loading state
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try{
-    const apiUrl = import.meta.env.VITE_FRONT_URL;
-    const res = await fetch(`https://orvian-2.onrender.com/api/newUser`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+    e.preventDefault();
+    setLoading(true); // 👈 start loading
+    try {
+      const res = await fetch(`https://orvian-2.onrender.com/api/newuser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    })
-    const data = await res.json();
-    console.log("Inserted:", data);
-  }
-  catch{
-    console.log("error")
-  }
+      const data = await res.json();
+      console.log("Inserted:", data);
 
-    toast({
-      title: "Consultation Booked!",
-      description: "We'll contact you within 24 hours to confirm your appointment.",
-    });
+      toast({
+        title: "Consultation Booked!",
+        description: "We'll contact you within 24 hours to confirm your appointment.",
+      });
 
-    // Reset form
-    setFormData({
-      fullName: '',
-      email: '',
-      phone: '',
-      timeSlot: '',
-      day: '',
-      referral: ''
-    });
+      // Reset form
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        timeSlot: '',
+        day: '',
+        referral: ''
+      });
+    } catch (err) {
+      console.error("Error:", err);
+    } finally {
+      setLoading(false); // 👈 stop loading
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -56,7 +58,6 @@ const ContactForm = () => {
 
   return (
     <section id="contact-form" className="py-20 relative">
-      {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
@@ -64,7 +65,6 @@ const ContactForm = () => {
 
       <div className="container mx-auto px-6 relative">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               Ready to <span className="gradient-text">Automate</span> Your Business?
@@ -75,9 +75,9 @@ const ContactForm = () => {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Form */}
             <div className="card-gradient">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Full Name */}
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Full Name *
@@ -93,6 +93,7 @@ const ContactForm = () => {
                   />
                 </div>
 
+                {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Email *
@@ -108,6 +109,7 @@ const ContactForm = () => {
                   />
                 </div>
 
+                {/* Phone */}
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Phone Number *
@@ -123,6 +125,7 @@ const ContactForm = () => {
                   />
                 </div>
 
+                {/* Time + Day */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -158,6 +161,7 @@ const ContactForm = () => {
                   </div>
                 </div>
 
+                {/* Referral */}
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     How did you hear about us?
@@ -172,13 +176,17 @@ const ContactForm = () => {
                   />
                 </div>
 
-                <Button type="submit" className="btn-hero w-full text-lg py-4">
-                  Book My Consultation
+                <Button
+                  type="submit"
+                  className="btn-hero w-full text-lg py-4"
+                  disabled={loading} // 👈 disable while loading
+                >
+                  {loading ? "Booking..." : "Book My Consultation"}
                 </Button>
               </form>
             </div>
 
-            {/* Benefits sidebar */}
+            {/* Sidebar */}
             <div className="space-y-6">
               <div className="card-gradient">
                 <h3 className="text-xl font-bold mb-4 gradient-text">
