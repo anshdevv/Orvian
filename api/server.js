@@ -16,9 +16,6 @@ const uri = process.env.MONGO_CONNECT_STRING;
 let client;
 let collection;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, "public")));
 
 // Catch-all: send index.html (for React Router / SPA)
