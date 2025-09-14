@@ -18,7 +18,7 @@ const ContactForm = () => {
     e.preventDefault()
     try{
     const apiUrl = import.meta.env.VITE_FRONT_URL;
-    const res = await fetch(`api/newUser`, {
+    const res = await fetch(`https://orvian-2.onrender.com/api/newUser`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
