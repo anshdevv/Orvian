@@ -7,7 +7,7 @@
     "nodemailer": "^7.0.6"
   },
   "scripts": {
-    "start": "node api/server.js"
+    "start": "node Frontend/api/server.js"
   }
 
 }
