@@ -16,6 +16,16 @@ const uri = process.env.MONGO_CONNECT_STRING;
 let client;
 let collection;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "public")));
+
+// Catch-all: send index.html (for React Router / SPA)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 // 🔹 Connect to MongoDB once and reuse
 async function connectToDB() {
   if (!client) {
