@@ -27,6 +27,11 @@ async function connectToDB() {
   return collection;
 }
 
+app.get("/api/demo",async(req,res)=>{
+  res.send("hello world")
+})
+
+
 // 🔹 POST route
 app.post("/api/newuser", async (req, res) => {
   try {
