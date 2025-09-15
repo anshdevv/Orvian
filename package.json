@@ -1,13 +1,14 @@
 {
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "mongodb": "^6.19.0",
-    "nodemailer": "^7.0.6"
+    "nodemailer": "^7.0.6",
+    "require": "^2.4.20"
   },
   "scripts": {
     "start": "node Frontend/api/server.js"
   }
-
 }

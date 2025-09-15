@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "../../../api/config.js"
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -19,14 +20,22 @@ const ContactForm = () => {
     e.preventDefault();
     setLoading(true); // 👈 start loading
     try {
-      const res = await fetch(`https://orvian-2.onrender.com/api/newuser`, {
+      await fetch("https://orvian-2.onrender.com/api/newuser", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          timeSlot: formData.timeSlot,
+          day: formData.day,
+          referral: formData.referral,
+        }),
       });
+      // const{error}=await supabase.from ("Clients").insert(formData)
 
-      const data = await res.json();
-      console.log("Inserted:", data);
 
       toast({
         title: "Consultation Booked!",
