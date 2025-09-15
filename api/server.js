@@ -60,69 +60,65 @@ app.get("/api/demo", async (req, res) => {
 
 // 🔹 POST route
 app.post("/api/newuser", async (req, res) => {
- console.log("api hit");
-try {
-  const { fullName, email, phone, day, timeSlot, referral } = req.body;
-  console.log(req.body)
+  console.log("api hit");
+  try {
+    const { fullName, email, phone, day, timeSlot, referral } = req.body;
+    console.log(req.body)
 
-  const { data, error } = await supabase
-    .from("Clients")
-    .insert([
-      {
-        fullName,
-        email,
-        phone,
-        timeSlot,
-        day,
-        referral
-      }
-    ])
-    .select(); // optional: return the inserted row(s)
+    const { data, error } = await supabase
+      .from("Clients")
+      .insert([
+        {
+          fullName,
+          email,
+          phone,
+          timeSlot,
+          day,
+          referral
+        }
+      ])
+      .select(); // optional: return the inserted row(s)
 
-  console.log("Inserted data:", data);
-  console.log("Supabase error:", error);
+    console.log("Inserted data:", data);
+    console.log("Supabase error:", error);
 
-  if (error) throw error;
+    if (error) throw error;
 
-  res.status(200).json({ message: "User inserted successfully", data });
-} catch (err) {
-  res.status(500).json({ error: err.message });
-}
-
-  // const result = await collection.insertOne(req.body);
+    res.status(200).json({ message: "User inserted successfully", data });
 
 
-  //   const transporter = nodemailer.createTransport({
-  //     service: "gmail",
-  //     auth: {
-  //       user: process.env.EMAIL_USER,
-  //       pass: process.env.EMAIL_PASS,
-  //     },
-  //   });
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  //   // Send to first recipient
-  //   await transporter.sendMail({
-  //     from: `"New User Bot" <${process.env.EMAIL_USER}>`,
-  //     to: process.env.EMAIL_TO,
-  //     subject: "🚀 New User Added to MongoDB",
-  //     text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
-  //   });
+    // Send to first recipient
+    await transporter.sendMail({
+      from: `"New User Bot" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_TO,
+      subject: "🚀 New User Added to MongoDB",
+      text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
+    });
 
-  //   // Send to second recipient
-  //   await transporter.sendMail({
-  //     from: `"New User Bot" <${process.env.EMAIL_USER}>`,
-  //     to: process.env.EMAIL_TO_SUFY,
-  //     subject: "🚀 New User Added to MongoDB",
-  //     text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
-  //   });
+    // Send to second recipient
+    await transporter.sendMail({
+      from: `"New User Bot" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_TO_SUFY,
+      subject: "🚀 New User Added to MongoDB",
+      text: `A new user was added:\n\n${JSON.stringify(req.body, null, 2)}`,
+    });
 
-  //   console.log("📧 Emails sent for new entry");
+    console.log("📧 Emails sent for new entry");
+    res.status(200).json({ insertedId: result.insertedId });
+  }
 
-  //   res.status(200).json({ insertedId: result.insertedId });
-  // } catch (err) {
-  //   console.error("Insert error:", err);
-  //   res.status(500).json({ error: "Insert failed" });
-  // }
+  catch (err) {
+    console.error("Insert error:", err);
+    res.status(500).json({ error: "Insert failed" });
+  }
 });
 
 // 🔹 Start server
