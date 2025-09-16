@@ -116,7 +116,7 @@ app.post("/api/newuser", async (req, res) => {
   }
 
   catch (err) {
-    console.error("Insert error:", err);
+    console.error("Insert error:", err);  
     res.status(500).json({ error: "Insert failed" });
   }
 });
